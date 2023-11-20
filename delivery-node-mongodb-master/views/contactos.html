@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lista de Contactos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Lista de Contactos</h2>
+    <!-- Formulario de búsqueda por apellido -->
+<div class="container mt-3">
+    <form class="form-inline">
+        <div class="form-group mb-2">
+            <label for="inputApellido" class="sr-only">Apellido</label>
+            <input type="text" class="form-control" id="inputApellido" placeholder="Apellido">
+        </div>
+        <button type="button" class="btn btn-primary mb-2" onclick="buscarPorApellido()">Buscar por Apellido</button>
+    </form>
+</div>
+
+
+    <% contactos.forEach(function(contacto) { %>
+        <div class="card mt-3">
+            <div class="card-body">
+               
+                <h5 class="card-title"><%= contacto.nombre %> <%= contacto.apellidos %></h5>
+                <p class="card-text">Correo: <%= contacto.correo %></p>
+                <p class="card-text">Fecha de Nacimiento: <%= contacto.fecha_nac %></p>
+                <img src="<%= contacto.foto %>" alt="Foto de <%= contacto.nombre %> <%= contacto.apellidos %>" class="img-fluid align-right" style="max-width: 200px;">
+
+                
+              <!-- Botones centrados debajo -->
+                <div style="margin-top: 10px; text-align: center;">
+
+                    <!-- Contenedor para los botones -->
+                    <div style="display: flex; gap: 10px;">
+
+                        <!-- Botón para editar -->
+                        <a href="/contactos/edit/<%= contacto.id %>" class="btn btn-primary">Editar</a>
+
+                        <!-- Formulario para eliminar -->
+                        <form action="/contactos/delete/<%= contacto.id %>" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este contacto?')">
+                            <!-- Agrega un campo oculto para indicar que es una solicitud DELETE -->
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    <% }); %>
+
+    <!-- Botón para crear un nuevo contacto -->
+    <a href="/contactos/create" class="btn btn-success mt-3">Crear Nuevo Contacto</a>
+</div>
+<br>
+<br>
+<hr>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Resto del contenido del cuerpo del documento -->
+<script>
+    // Función para filtrar los contactos por apellido
+    function buscarPorApellido() {
+        // Obtiene el valor del campo de búsqueda
+        var apellido = document.getElementById('inputApellido').value.toLowerCase();
+
+        // Oculta todos los contactos
+        var contactos = document.querySelectorAll('.card');
+        contactos.forEach(function(contacto) {
+            contacto.style.display = 'none';
+        });
+
+        // Muestra los contactos que coinciden con el apellido
+        contactos.forEach(function(contacto) {
+            var apellidoContacto = contacto.querySelector('.card-title').textContent.toLowerCase();
+            if (apellidoContacto.includes(apellido)) {
+                contacto.style.display = 'block';
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>
